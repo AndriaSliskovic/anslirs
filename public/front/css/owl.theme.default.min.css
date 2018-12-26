@@ -1,0 +1,52 @@
+.owl-dots,
+.owl-nav {
+  text-align: center;
+}
+.owl-nav {
+  margin-top: 10px;
+}
+.owl-nav [class*="owl-"] {
+  background: transparent;
+  border-radius: 3px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  margin: 5px;
+  padding: 4px 7px;
+}
+.owl-nav [class*="owl-"]:hover {
+  background: #4dc755;
+  color: #fff;
+  text-decoration: none;
+}
+.owl-nav .disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+.owl-nav.disabled + .owl-dots {
+  margin-top: 160px;
+}
+.owl-dots .owl-dot {
+  display: inline-block;
+}
+.owl-dots .owl-dot span {
+  backface-visibility: visible;
+  background: #858689 none repeat scroll 0 0;
+  border-radius: 30px;
+  display: block;
+  height: 9px;
+  margin: 5px;
+  transition: opacity 0.2s ease 0s;
+  width: 9px;
+}
+.owl-dots .owl-dot.active span,
+.owl-dots .owl-dot:hover span {
+  background: #0d70a0 none repeat scroll 0 0;
+}
+/*# sourceMappingURL=owl.theme.default.min.css.map */
+/*# sourceMappingURL=owl.theme.default.min.css.map */
+/*# sourceMappingURL=owl.theme.default.min.css.map */
+/*# sourceMappingURL=owl.theme.default.min.css.map */
+/*# sourceMappingURL=owl.theme.default.min.css.map */
+/*# sourceMappingURL=owl.theme.default.min.css.map */
