@@ -17,7 +17,7 @@ class TabelaCategorys extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('name');
-            $table->integer('oblast_id');
+            $table->integer('oblast_id')->unsigned()->nullable()->index();
             $table->timestamps();
         });
     }

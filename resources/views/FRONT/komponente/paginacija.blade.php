@@ -1,4 +1,4 @@
-<ul class="pagination">
+<ul class="pagination" dusk="paginacija">
 	<li>
 		<a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
 	</li>

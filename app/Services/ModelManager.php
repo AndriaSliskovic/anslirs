@@ -57,7 +57,7 @@ class ModelManager
 //Učitavanje slike (ako je ima)
     public function getImage($request,$id,$var,$dtoClass){
         $dto = new $dtoClass($this->request);
-        //dd($dto,$id);
+//        dd($dto,$id);
         $dto=$dto->getImageAbst($request,$id,$var);
         return $dto;
     }

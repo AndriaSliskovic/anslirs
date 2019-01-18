@@ -1,3 +1,5 @@
-@foreach($menu as $m)
+<div dusk="vertMenu">
+	@foreach($menu as $m)
 		<li><a title={{$m->name}} href="{{route($m->putanja)}}">{{$m->name}}</a></li>
 	@endforeach
+</div>

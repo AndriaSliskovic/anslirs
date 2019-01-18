@@ -1,4 +1,4 @@
-<article class="blogpost" id="vazniPostovi">
+<article class="blogpost" id="vazniPostovi" >
 
 	<div class="head"><h6>Važni postovi</h6></div>
 	<!-- Desni Blog -->

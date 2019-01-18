@@ -10,6 +10,7 @@ namespace App\Repository;
 
 use App\SectCat;
 use App\Section;
+use App\Services\UploadPicture;
 use Illuminate\Http\Request;
 use App\DataTransferObject\SkillsDTO;
 use App\Post;
@@ -59,8 +60,8 @@ class AdminRepository
     }
 
     public function selectTip (){
-        $category=Tipovi::all()->pluck('name','id')->toArray();
-        return $category;
+        $tip=Tipovi::all()->pluck('name','id')->toArray();
+        return $tip;
     }
 
     public function selectUser (){
@@ -87,6 +88,11 @@ class AdminRepository
     public function deleteOldFile(Request $request, $file){
         $delete=new UploadFile($request);
         $delete->deleteFile($file);
+    }
+
+    public function deleteOldImage(Request $request, $file){
+        $delete=new UploadPicture($request);
+        $delete->deletePicture($file);
     }
 
 }

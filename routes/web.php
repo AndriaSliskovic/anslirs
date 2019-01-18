@@ -1,5 +1,8 @@
 <?php
-
+//Ruta za testiranje Dusk-a
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 Route::get('test','TestController@index')->name('test');
 Route::get('/','HomeController@index')->name('home');
 Route::get('agencija','HomeController@agencija')->name('agencija');
@@ -16,13 +19,16 @@ Route::get('download/{id}','HomeController@downloadOblast')->name('downloadOblas
 Route::get('/adminHome', 'AdminController@index')->name('adminHome');
 Route::resource('user','UserController');
 Route::resource('profile', 'ProfilesController');
+//Izvuceno iz middlewarea zbog testiranja
+
+Route::resource('kategorije', 'CategoryController');
 
 Route::group(['middleware' => ['admin'],'prefix' => 'admin'], function () {
 
     Route::resource('settings', 'SettingsController');
-    Route::resource('kategorije', 'CategoryController');
-    Route::resource('menu','MenuController');
     Route::resource('oblast','OblastController');
+    Route::resource('menu','MenuController');
+
     Route::resource('tipovi','TipoviController');
     Route::resource('postovi','PostController');
     Route::resource('section','SectionController');

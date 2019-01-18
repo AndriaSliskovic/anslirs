@@ -25,7 +25,8 @@ class PostController extends Controller
         $this->repository= new AdminRepository();
     }
     public function index()
-    {   $this->data['user']=\Auth::user();
+    {
+        $this->data['user']=\Auth::user();
         $this->view=$this->data['viewPath'].'.index';
         //Ime promenljive koja se salje na view
         $this->data['var']=$this->data['model']::all();
@@ -52,14 +53,17 @@ class PostController extends Controller
     {
         //dd($request);
         $var = $this->instance->createModel($this->data['modelDTO']);
-        //dd($var);
+//        dd($var);
         if($request->slika) {
-
+//        dd('ima slika');
             $this->instance->getImage($request, null, $var,$this->data['modelDTO']);
-
+dd($request->slika);
         }else{
+//        dd('nema slika');
             $var->slika=$this->data['defaultImage'];
+//            dd($var);
         }
+//        dd($var);
         $var->save();
         //Ubacivanje u pivot tabelu
         Session::flash('success','Uspesno upisani podaci');
@@ -89,7 +93,6 @@ class PostController extends Controller
         $this->data['tip']=$this->repository->selectTip();
         $this->data['user']=$this->repository->selectUser();
         $this->data['oblast']=$this->repository->getOblast($id);
-
         return view($this->view,
             $this->data
         );
@@ -117,7 +120,7 @@ class PostController extends Controller
         $var=$this->data['model']::find($id);
         $putanjaSlike=$var->slika;
         //Brisanje fajla slike
-        $this->repository->deleteOldPicture($request,$putanjaSlike);
+        $this->repository->deleteOldImage($request,$putanjaSlike);
         $var->delete();
         Session::flash('success','Uspesno ste obrisali zapis');
         return redirect()->back();

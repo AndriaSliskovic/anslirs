@@ -1,6 +1,6 @@
-<div class="mainslide owl-carousel">
+<div class="mainslide owl-carousel" dusk="caruserVeliki">
     @foreach($var as $v)
-    <div class="item">
+    <div class="item" >
         <img src="{{asset($v->slika)}}" alt="slide1">
         <div class="carousel-caption">
             <span>

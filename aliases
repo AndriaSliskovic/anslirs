@@ -12,6 +12,12 @@ alias serve=serve-laravel
 alias xoff='sudo phpdismod -s cli xdebug'
 alias xon='sudo phpenmod -s cli xdebug'
 
+alias t='phpunit'
+
+function tf(){
+t --filter="$@"
+}
+
 alias nrd="npm run dev"
 alias nrw="npm run watch"
 alias nrww="npm run watch-poll"

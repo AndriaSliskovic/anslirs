@@ -1,9 +1,11 @@
 <!-- Glavni Bolog -->
-<section id="glavniBlog">
+<section id="glavniBlog" dusk="velikiBlog">
     @foreach($var as $v)
     <div class="weekday">
         <div class="excerpt_data">
-            <a href="{{route('single',['slug'=>$v->slug])}}" class="border"><img src="{{asset($v->slika)}}" class="img-responsive" alt="blog"></a>
+            <a href="{{route('single',['slug'=>$v->slug])}}" class="border">
+                <img src="{{asset($v->slika)}}" class="img-responsive" alt="{{$v->slika}}" dusk="slika">
+            </a>
             <a href="{{route('single',['slug'=>$v->slug])}}">
             <article >
                 <div class="top" >

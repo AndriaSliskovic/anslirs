@@ -1,4 +1,4 @@
-<table class="table table-striped">
+<table class="table table-striped" dusk="tabelaDokumenti">
     <thead>
     <tr>
         <th>Naziv dokumenta</th>

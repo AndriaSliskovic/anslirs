@@ -20,7 +20,7 @@
             <div class="col-xs-12 col-sm-6 col-lg-6">
                 <ul class="fmenu">
                     @foreach($menu as $m)
-                    <li><a href="{{$m->link}}" title="{{$m->name}}">{{$m->name}}</a></li>
+                    <li><a href="{{route($m->putanja)}}" title="{{$m->name}}">{{$m->name}}</a></li>
                     @endforeach
                 </ul>
             </div>

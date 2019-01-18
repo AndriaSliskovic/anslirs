@@ -44,6 +44,7 @@ public $oblast_id;
     {
         return [
             'name'=>'required|min:2|max:60',
+            'oblast_id'=>'required|numeric'
         ];
     }
 

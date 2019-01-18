@@ -2,7 +2,7 @@
 @foreach($post as $p)
 		<div class="col-lg-12">
 
-		<li class="col-sm-12 col-lg-4">
+		<li class="col-sm-12 col-lg-4" dusk="leviPost">
 		<a href="#"><img alt="blog" class="img-responsive" src="{{asset($p->slika)}}">{{$p->naslov}}</a>
 		</li>
 

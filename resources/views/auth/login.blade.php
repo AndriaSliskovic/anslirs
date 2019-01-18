@@ -18,7 +18,7 @@
 @endsection
 
 @section('sadrzaj')
-    <h3>{{$settings->title}}</h3>
+    {{--<h3>{{$settings->title}}</h3>--}}
     <!-- Login -->
 <div class="login__block active" id="l-login">
     <div class="login__block__header">
@@ -45,15 +45,15 @@
 
         {{--Email--}}
         <div class="form-group">
-            <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="Email Address" name="email" required autofocus>
+            <input type="text" dusk="emailPolje" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="Email Address" name="email" required autofocus>
         </div>
         {{--Password--}}
         <div class="form-group">
-            <input type="password" placeholder="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+            <input type="password" dusk="passPolje" placeholder="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
         </div>
         {{--submit--}}
             <div class="col-md-8 offset-md-4">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" dusk="prijaviSe">
                     Prijavi se
                 </button>
             </div>

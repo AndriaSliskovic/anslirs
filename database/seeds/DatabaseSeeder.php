@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             Seed_Menu::class,
             Seed_Post::class,
             Seed_Profile::class,
+            Seed_SectCat::class,
+            Seed_Section::class,
 
             //Many to Many relacija
         ]);
