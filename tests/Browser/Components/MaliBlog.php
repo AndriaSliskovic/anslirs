@@ -5,6 +5,7 @@ namespace Tests\Browser\Components;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 use App\Post;
+use Tests\Browser\utilities\ElementHelper;
 
 class MaliBlog extends BaseComponent
 {
@@ -42,10 +43,26 @@ class MaliBlog extends BaseComponent
         ];
     }
     public function osnovniElementiKomponente(Browser $browser){
-        foreach ($browser->osnovniElementi as $el){
-            $browser->assertSeeLink($el)
-            ;
+        foreach ($browser->osnovniElementi as $key=>$value){
+            //Ukoliko je dat multidimenzionalni niz poziva staticku metodu helpera
+            if (is_array($value)){
+                ElementHelper::osnovniElementi($browser,$key,$value);
+            }else{
+                //Ukoliko nije niz ispituje tekst
+                $browser->assertSee($value);
+            }
         }
+        //Ukoliko ima sliku provera da li je niz odgovarajucih slika ucitan
+        //Treba zadati apsolutnu putanju selektora
+        $selectorSlike=['#vazniPostovi .img-responsive'];
+        if (isset($selectorSlike)){
+            foreach ($selectorSlike as $s){
+//                dd($s);
+                $s=ElementHelper::selektorSlike($browser,$s);
+                $browser->assertPresent($s);
+            }
+        }
+        ;
 
     }
 
@@ -102,7 +119,7 @@ class MaliBlog extends BaseComponent
         $browser->assertSeeIn('.pagination',$maxPaginacija);
         //Proverava da li je prikazana kompletna panigacija
         $browser->assertSeeIn('.pagination',$maxPaginacija);
-        for ($i=1;$i<$maxPaginacija+1;$i++){
+        for ($i=1;$i=$maxPaginacija+1;$i++){
             $browser->assertSeeIn('.pagination',$i);
         };
 

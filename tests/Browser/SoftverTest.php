@@ -2,7 +2,6 @@
 
 namespace Tests\Browser;
 
-use Tests\Browser\Components\SrednjiBlog;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -11,20 +10,16 @@ use Tests\Browser\Components\CaruselVeliki;
 use Tests\Browser\Components\Footer;
 use Tests\Browser\Components\Header;
 use Tests\Browser\Components\Kategorije;
-use Tests\Browser\Components\KnjigUsluge;
-use Tests\Browser\Components\MaliBlog;
-use Tests\Browser\Components\Menu;
 use Tests\Browser\Components\MenuComponent;
-use Tests\Browser\Components\OpstiDeo;
-use Tests\Browser\Components\VelikiBlog;
+use Tests\Browser\Components\SrednjiBlog;
 
-class AgencijaTest extends DuskTestCase
+class SoftverTest extends DuskTestCase
 {
     public function loadPage(){
         $this->browse(function (Browser $browser) {
-            $browser->visit('/agencija')
+            $browser->visit('/softver')
                 ->pause(3000)
-                ->assertUrlIs($this->baseUrl().'/agencija')
+                ->assertUrlIs($this->baseUrl().'/softver')
             ;
         });
     }
@@ -34,7 +29,7 @@ class AgencijaTest extends DuskTestCase
     /**
      * @test
      * @group AgenOsnovniElementHomePage
-     * @group AgencijaTest
+     * @group SoftverTest
      */
 
     public function testiranje_osnovnih_elemenata_stranice(){
@@ -49,8 +44,8 @@ class AgencijaTest extends DuskTestCase
 
     /**
      * @test
-     * @group AgenTestiranjeHedera
-     * @group AgencijaTest
+     * @group SoftTestiranjeHedera
+     * @group SoftverTest
      */
 
     public function testiranje_hedera_Home_page(){
@@ -69,8 +64,8 @@ class AgencijaTest extends DuskTestCase
 
     /**
      * @test
-     * @group AgenTestiranjeGlavnogMenija
-     * @group AgencijaTest
+     * @group SoftTestiranjeGlavnogMenija
+     * @group SoftverTest
      */
 
     public function test_glavnog_menija(){
@@ -90,8 +85,8 @@ class AgencijaTest extends DuskTestCase
 
     /**
      * @test
-     * @group AgenTestiranjeFootera
-     * @group AgencijaTest
+     * @group SoftTestiranjeFootera
+     * @group SoftverTest
      */
     public function test_footera(){
         $this->loadPage();
@@ -109,20 +104,20 @@ class AgencijaTest extends DuskTestCase
         });
     }
 
-    //----- TESTIRANJE KOMPONENTI STRANICE AGENCIJA -----//
+    //----- TESTIRANJE KOMPONENTI STRANICE Softver -----//
 
     /**
      * @test
-     * @group AgenKompKaruselVeliki
-     * @group AgencijaTest
+     * @group SoftKompKaruselVeliki
+     * @group SoftverTest
      */
 
     public function komponenta_carusel_veliki(){
 
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $sectionId=6;
-            $osnovniElementi=['Kompletna knjigovodstvena usluga','Praćenje propisa','Izrada završnih računa'];
+            $sectionId=8;
+            $osnovniElementi=['Knjigovodsveni softver','WEB SAJTOVI','Softver za pravna lica'];
 //  !!! NACIN PUSTANJA DODATNOG PARAMETRA KROZ CLOUSURE FUNKCIJU !!!
             $browser->whenAvailable(new CaruselVeliki(), function ($browser) use ($sectionId,$osnovniElementi) {
 //  !!! SVE MORA DA SE SETUJE U OBJEKAT BROWSER ZBOG CLOUSURE FUNKCIJE  !!!
@@ -140,15 +135,15 @@ class AgencijaTest extends DuskTestCase
 
     /**
      * @test
-     * @group AgenKompAbout
-     * @group AgencijaTest
+     * @group SoftKompAbout
+     * @group SoftverTest
      */
 
     public function komponenta_about(){
         $this->loadPage();
         $this->browse(function (Browser $browser) {
             $sectionId=10;
-            $osnovniElementi=['SLIŠKOVIĆ JELENA','Šef knjigovodstva'];
+            $osnovniElementi=['SLIŠKOVIĆ ANDRIA','direktor ANSLI D.O.O.'];
             $browser->whenAvailable(new About(), function ($browser) use($sectionId,$osnovniElementi) {
                 $browser->sectionId=$sectionId;
                 $browser->osnovniElementi=$osnovniElementi;
@@ -163,8 +158,8 @@ class AgencijaTest extends DuskTestCase
 
     /**
      * @test
-     * @group AgenKompKategorije
-     * @group AgencijaTest
+     * @group SoftKompKategorije
+     * @group SoftverTest
      */
 
     public function komponenta_kategorije(){
@@ -188,18 +183,18 @@ class AgencijaTest extends DuskTestCase
 
     /**
      * @test
-     * @group AgenSrednjiBlog
-     * @group AgencijaTest
+     * @group SoftSrednjiBlog
+     * @group SoftverTest
      */
     public function kommponenta_srednji_blog(){
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $oblastId=1;
+            $oblastId=2;
             $paginacija=4;
-            $ruta='agencija';
-            $osnovniElementi=[  'link'=>['Predaja završnih računa ','Objavio'],
-                                'text'=>['Agencija obaveštenje','Kategorija']
+            $osnovniElementi=[  'link'=>['Novosti na novom sajtu.','Objavio Andria'],
+                'text'=>['Softver obavestenje','Kategorija']
             ];
+            $ruta='softver';
             $browser->whenAvailable(new SrednjiBlog(), function ($browser) use ($osnovniElementi,$oblastId,$paginacija,$ruta) {
                 $browser->osnovniElementi=$osnovniElementi;
                 $browser->oblastId=$oblastId;

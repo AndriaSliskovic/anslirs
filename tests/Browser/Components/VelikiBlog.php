@@ -5,6 +5,7 @@ namespace Tests\Browser\Components;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 use App\Oblast;
+use Tests\Browser\utilities\ElementHelper;
 
 class VelikiBlog extends BaseComponent
 {
@@ -42,11 +43,28 @@ class VelikiBlog extends BaseComponent
     }
 
     public function osnovniElementiKomponente(Browser $browser){
-        foreach ($browser->osnovniElementi as $el){
-            $browser->assertSee($el);
+
+        foreach ($browser->osnovniElementi as $key=>$value){
+            //Ukoliko je dat multidimenzionalni niz poziva staticku metodu helpera
+            if (is_array($value)){
+                ElementHelper::osnovniElementi($browser,$key,$value);
+            }else{
+                //Ukoliko nije niz ispituje tekst
+                $browser->assertSee($value);
+            }
         }
-        $browser->assertSeeLink('Procitaj vise')
+        //Ukoliko ima sliku provera da li je niz odgovarajucih slika ucitan
+        //Treba zadati apsolutnu putanju selektora
+        $selectorSlike=['.img-responsive'];
+        if (isset($selectorSlike)){
+            foreach ($selectorSlike as $s){
+//                dd($s);
+                $s=ElementHelper::selektorSlike($browser,$s);
+                $browser->assertPresent($s);
+            }
+        }
         ;
+
     }
 
 

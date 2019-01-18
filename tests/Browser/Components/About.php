@@ -6,6 +6,7 @@ use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 use App\Section;
 use Tests\Browser\utilities\StringHelpers;
+use Tests\Browser\utilities\ElementHelper;
 
 class About extends BaseComponent
 {
@@ -39,21 +40,29 @@ class About extends BaseComponent
     {
         return [
             '@element' => '#selector',
+            '@selektorSlike' => '.aboutimg'
         ];
     }
 
     public function osnovniElementiKomponente(Browser $browser){
 
-        //Pristupanje src atributu preko JQuerija
-        $srcAtribut=$browser->script("return $('.aboutimg').attr('src')");
-        //Selektovanje elementa preko src atributa
-        $selectorSlike='[src="'.$srcAtribut[0].'"]';
-
-        foreach ($browser->osnovniElementi as $el){
-            $browser->assertSee($el);
+        foreach ($browser->osnovniElementi as $key=>$value){
+            //Ukoliko je dat multidimenzionalni niz poziva staticku metodu helpera
+            if (is_array($value)){
+                ElementHelper::osnovniElementi($browser,$key,$value);
+            }else{
+                //Ukoliko nije niz ispituje tekst
+                $browser->assertSee($value);
+            }
         }
-            //Provera da li je odgovarajuca slika ucitana
-            $browser->assertPresent($selectorSlike);
+            //Ukoliko ima sliku provera da li je niz odgovarajucih slika ucitan
+            $selectorSlike=['.aboutimg'];
+        if (isset($selectorSlike)){
+            foreach ($selectorSlike as $s){
+                $s=ElementHelper::selektorSlike($browser,$s);
+                $browser->assertPresent($s);
+            }
+        }
         ;
     }
 

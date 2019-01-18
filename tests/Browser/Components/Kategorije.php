@@ -5,6 +5,7 @@ namespace Tests\Browser\Components;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 use App\Category;
+use Tests\Browser\utilities\ElementHelper;
 
 class Kategorije extends BaseComponent
 {
@@ -42,7 +43,23 @@ class Kategorije extends BaseComponent
     }
 
     public function osnovniElementiKomponente(Browser $browser){
-        $browser->assertSee('KATEGORIJE')
+        foreach ($browser->osnovniElementi as $key=>$value){
+            //Ukoliko je dat multidimenzionalni niz poziva staticku metodu helpera
+            if (is_array($value)){
+                ElementHelper::osnovniElementi($browser,$key,$value);
+            }else{
+                //Ukoliko nije niz ispituje tekst
+                $browser->assertSee($value);
+            }
+        }
+        //Ukoliko ima sliku provera da li je niz odgovarajucih slika ucitan
+        $selectorSlike=null;
+        if (isset($selectorSlike)){
+            foreach ($selectorSlike as $s){
+                $s=ElementHelper::selektorSlike($browser,$s);
+                $browser->assertPresent($s);
+            }
+        }
         ;
     }
 

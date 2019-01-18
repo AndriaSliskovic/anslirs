@@ -5,6 +5,7 @@ namespace Tests\Browser\Components;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 use App\Oblast;
+use Tests\Browser\utilities\ElementHelper;
 
 class SrednjiBlog extends BaseComponent
 {
@@ -42,10 +43,25 @@ class SrednjiBlog extends BaseComponent
     }
 
     public function osnovniElementiKomponente(Browser $browser){
-        foreach ($browser->osnovniElementi as $el){
-            $browser->assertSee($el);
+        foreach ($browser->osnovniElementi as $key=>$value){
+            //Ukoliko je dat multidimenzionalni niz poziva staticku metodu helpera
+            if (is_array($value)){
+                ElementHelper::osnovniElementi($browser,$key,$value);
+            }else{
+                //Ukoliko nije niz ispituje tekst
+                $browser->assertSee($value);
+            }
         }
-        $browser->assertSeeLink('Pročitaj više')
+        //Ukoliko ima sliku provera da li je niz odgovarajucih slika ucitan
+        //Treba zadati apsolutnu putanju selektora zbog jQueryja
+        $selectorSlike=['.img-responsive'];
+        if (isset($selectorSlike)){
+            foreach ($selectorSlike as $s){
+//                dd($s);
+                $s=ElementHelper::selektorSlike($browser,$s);
+                $browser->assertPresent($s);
+            }
+        }
         ;
     }
 
@@ -79,7 +95,7 @@ class SrednjiBlog extends BaseComponent
             //Provera preko rute
             ->assertRouteIs('single',$data[0]->slug)
             ->back()
-            ->waitForRoute('agencija');
+            ->waitForRoute($browser->ruta);
 
         //Testiranje svih ucitanih postova
         foreach ($data as $d){
@@ -89,10 +105,12 @@ class SrednjiBlog extends BaseComponent
                 //Provera preko rute
                 ->assertRouteIs('single',$d->slug)
                 ->back()
-                ->waitForRoute('agencija')
+                ->waitForRoute($browser->ruta)
             ;
         }
-        $browser->assertRouteIs('agencija');
+        //Wait da bi se izvrsio sledeci test
+        $browser->pause(4000);
+        $browser->assertRouteIs($browser->ruta);
     }
     public function postoviPoOblasti($idOblast,$pag=null){
         $postovi=Oblast::find($idOblast)->posts()
@@ -107,8 +125,7 @@ class SrednjiBlog extends BaseComponent
         $maxPaginacija=ceil($brojPostova/$browser->paginacija);
         //Proverava da li je prikazan maksimalan broj panigacije
         $browser->assertSeeIn('.pagination',$maxPaginacija);
-        //Proverava da li je prikazana kompletna panigacija
-        $browser->assertSeeIn('.pagination',$maxPaginacija);
+        //Proverava da li je prikazana kompletna panigacija (ukoliko je to predvidjeno u bladeu)
         for ($i=1;$i<$maxPaginacija+1;$i++){
             $browser->assertSeeIn('.pagination',$i);
         };

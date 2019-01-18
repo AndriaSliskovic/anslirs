@@ -48,19 +48,7 @@ class CaruselVeliki extends BaseComponent
         }
     }
 
-    public function agencijaOsnovniElementiKomponente(Browser $browser){
-        foreach ($browser->osnovniElementi as $el){
-            $browser->assertSee($el)
-                ->pause(4000);
-        }
-//        $browser->assertSee('Kompletna')
-//            ->pause(4000)
-//            ->assertSee('Praćenje propisa')
-//            ->pause(4000)
-//            ->assertSee('Izrada završnih računa')
-//
-//        ;
-    }
+
     public function proveraPodatakaIzModela($browser){
 //      !!! $browser->sectionId je setovani properti
         $data=$this->carusel($browser->sectionId);
