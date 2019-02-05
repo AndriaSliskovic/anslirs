@@ -2,6 +2,7 @@
 
 namespace Tests\Browser;
 
+use Tests\Browser\Components\Proizvodix2;
 use Tests\Browser\Components\SrednjiBlog;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
@@ -11,12 +12,8 @@ use Tests\Browser\Components\CaruselVeliki;
 use Tests\Browser\Components\Footer;
 use Tests\Browser\Components\Header;
 use Tests\Browser\Components\Kategorije;
-use Tests\Browser\Components\KnjigUsluge;
-use Tests\Browser\Components\MaliBlog;
-use Tests\Browser\Components\Menu;
 use Tests\Browser\Components\MenuComponent;
-use Tests\Browser\Components\OpstiDeo;
-use Tests\Browser\Components\VelikiBlog;
+
 
 class AgencijaTest extends DuskTestCase
 {
@@ -118,16 +115,11 @@ class AgencijaTest extends DuskTestCase
      */
 
     public function komponenta_carusel_veliki(){
-
+        $this->data['elementi']=['Kompletna knjigovodstvena usluga','Praćenje propisa','Izrada završnih računa'];
+        $this->data['sectionId']=6;
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $sectionId=6;
-            $osnovniElementi=['Kompletna knjigovodstvena usluga','Praćenje propisa','Izrada završnih računa'];
-//  !!! NACIN PUSTANJA DODATNOG PARAMETRA KROZ CLOUSURE FUNKCIJU !!!
-            $browser->whenAvailable(new CaruselVeliki(), function ($browser) use ($sectionId,$osnovniElementi) {
-//  !!! SVE MORA DA SE SETUJE U OBJEKAT BROWSER ZBOG CLOUSURE FUNKCIJE  !!!
-                $browser->sectionId=$sectionId;
-                $browser->osnovniElementi=$osnovniElementi;
+            $browser->whenAvailable(new CaruselVeliki($this->data), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
                     ->proveraPodatakaIzModela($browser)
@@ -145,13 +137,11 @@ class AgencijaTest extends DuskTestCase
      */
 
     public function komponenta_about(){
+        $this->data['elementi']=['SLIŠKOVIĆ JELENA','Šef knjigovodstva'];
+        $this->data['sectionId']=10;
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $sectionId=10;
-            $osnovniElementi=['SLIŠKOVIĆ JELENA','Šef knjigovodstva'];
-            $browser->whenAvailable(new About(), function ($browser) use($sectionId,$osnovniElementi) {
-                $browser->sectionId=$sectionId;
-                $browser->osnovniElementi=$osnovniElementi;
+            $browser->whenAvailable(new About($this->data), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
                     ->proveraPodatakaIzModela($browser)
@@ -168,11 +158,11 @@ class AgencijaTest extends DuskTestCase
      */
 
     public function komponenta_kategorije(){
+        $this->data['elementi']=['KATEGORIJE'];
+        $this->data['ruta']='agencija';
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $osnovniElementi=['KATEGORIJE'];
-            $browser->whenAvailable(new Kategorije(), function ($browser) use($osnovniElementi) {
-                $browser->osnovniElementi=$osnovniElementi;
+            $browser->whenAvailable(new Kategorije($this->data), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
                     ->proveraPodatakaIzModela($browser)
@@ -192,24 +182,42 @@ class AgencijaTest extends DuskTestCase
      * @group AgencijaTest
      */
     public function kommponenta_srednji_blog(){
+        $this->data['elementi']=[  'link'=>['Predaja završnih računa ','Objavio'],
+                                'text'=>['Agencija obaveštenje','Kategorija']
+                                ];
+        $this->data['oblastId']=1;
+        $this->data['paginacija']=4;
+        $this->data['ruta']='agencija';
+
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $oblastId=1;
-            $paginacija=4;
-            $ruta='agencija';
-            $osnovniElementi=[  'link'=>['Predaja završnih računa ','Objavio'],
-                                'text'=>['Agencija obaveštenje','Kategorija']
-            ];
-            $browser->whenAvailable(new SrednjiBlog(), function ($browser) use ($osnovniElementi,$oblastId,$paginacija,$ruta) {
-                $browser->osnovniElementi=$osnovniElementi;
-                $browser->oblastId=$oblastId;
-                $browser->paginacija=$paginacija;
-                $browser->ruta=$ruta;
+            $browser->whenAvailable(new SrednjiBlog($this->data), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
                     ->proveraPodatakaIzModela($browser)
                     ->testiranjeNavigacijePosta($browser)
                     ->brojMaxPaginacije($browser)
+                ;
+            });
+
+        });
+    }
+
+
+    /**
+     * @test
+     * @group AgenProizvodi2x2
+     * @group AgencijaTest
+     */
+    public function kommponenta_proizvodi_2x2(){
+        $this->data['elementi']=['PREDUZETNICI','Vođenje poslovnih knjiga','PRAVNA LICA','pravnim licima'];
+        $this->data['secId']=7;
+        $this->loadPage();
+        $this->browse(function (Browser $browser) {
+            $browser->whenAvailable(new Proizvodix2($this->data), function ($browser) {
+                $browser
+                    ->osnovniElementiKomponente($browser)
+                    ->proveraPodatakaIzModela($browser)
                 ;
             });
 

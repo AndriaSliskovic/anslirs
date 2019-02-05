@@ -35,9 +35,6 @@ class CategoryController extends Controller
         $this->view=$this->data['viewPath'].'.index';
         //Ime promenljive koja se salje na view
         $this->data['var']=$this->data['model']::all();
-        //$this->data['oblast']=$this->repository->getCategoryOblast();
-        //dd($this->data['var']);
-        //dd($this->data['oblast']);
         $this->data['sadrzaj']='index';
         return view($this->view,
             $this->data
@@ -49,6 +46,7 @@ class CategoryController extends Controller
         $this->view=$this->data['viewPath'].'.create';
         $this->data['sadrzaj']='create';
         $this->data['oblast']=$this->repository->selectOblast();
+        $this->data['naslov']="Unesi novu kategoriju";
         return view($this->view,
             $this->data
         );

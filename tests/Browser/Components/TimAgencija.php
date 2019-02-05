@@ -6,8 +6,9 @@ use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 use Tests\Browser\utilities\ElementHelper;
 use App\Section;
+use Tests\Browser\utilities\StringHelpers;
 
-class Proizvodix2 extends BaseComponent
+class TimAgencija extends BaseComponent
 {
 
     protected $data;
@@ -22,7 +23,7 @@ class Proizvodix2 extends BaseComponent
      */
     public function selector()
     {
-        return '#proizvodix2';
+        return '#aboutAgencija';
     }
 
     /**
@@ -59,57 +60,39 @@ class Proizvodix2 extends BaseComponent
                 $browser->assertSee($value);
             }
         }
-        //Ocekuju se dve slike, koristi se for petlja
-        for ($i=1;$i<3;$i++){
-            $selectorSlike=["#proizvodix2 .slidebox:nth-of-type(".$i.") [alt]"];
+        //Apsolutna putanja
+        $selectorSlike=['#aboutAgencija .rightblog .aboutimg'];
+        if (isset($selectorSlike)){
+            foreach ($selectorSlike as $s){
+                $s=ElementHelper::selektorSlike($browser,$s);
+                $browser->assertPresent($s);
+            }
+        }
+        ;
+    }
+
+    public function proveraPodatakaIzModela(Browser $browser){
+        $data=$this->section($this->data['sectionId']);
+//        dd($data);
+        foreach ($data as $d){
+            //Na strani su prikazana velika slova
+            $naslov=StringHelpers::srbStringUper($d->naslov);
+            //Provera naslova
+            $browser->assertSee($naslov)
+                //Provera podnaslova
+                ->assertSee($d->podnaslov)
+            ;
+            $selectorSlike=['#aboutAgencija .rightblog .aboutimg'];
             if (isset($selectorSlike)){
                 foreach ($selectorSlike as $s){
                     $s=ElementHelper::selektorSlike($browser,$s);
                     $browser->assertPresent($s);
                 }
             }
-            ;
         }
-
     }
 
-    public function proveraPodatakaIzModela(Browser $browser){
-        $data=$this->proizvodi($this->data['secId']);
-        foreach ($data as $d){
-            //Provera naslova
-            $browser->assertSee($d->naslov)
-                //Provera podnaslov
-                ->assertSee($d->podnaslov)
-            ;
-        }
-        //  PROVERAVA DA LI SU PRIKAZANE SLIKE KOJE SU UCITANE IZ MODELA
-        //Broj vracenih zapisa
-        $brojzapisa=$data->count();
-        $data=$data->toArray();
-//        dd($brojzapisa);
-        for ($i=1;$i<$brojzapisa+1;$i++){
-            //Setuje svaku sliku posebno
-            $selectorSlike="#proizvodix2 .slidebox:nth-of-type(".$i.") [alt]";
-            if (isset($selectorSlike)){
-                    $s=ElementHelper::selektorSlike($browser,$selectorSlike);
-//                  Ispituje da li je prisutna
-                    $browser->assertPresent($s);
-//                   Vraca prvi clan niza
-                    $src=ElementHelper::getSrcAttribute($browser,$selectorSlike);
-//                  Uporedjuje sa modelom
-                    if ($src == $data[$i-1]['slika']){
-                        continue;
-                    }else{
-                        dd('Nije ucitana odgovarajuca slika !!!');
-                    }
-            }
-            ;
-        }
-
-    }
-
-
-    public function proizvodi($idCatSec){
+    public function section($idCatSec){
         return Section::where('sec_id',$idCatSec)->get();
     }
 }

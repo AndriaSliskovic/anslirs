@@ -9,6 +9,11 @@ use Tests\Browser\utilities\ElementHelper;
 
 class MaliBlog extends BaseComponent
 {
+    protected $data;
+    public function __construct($data=null)
+    {
+        $this->data=$data;
+    }
     /**
      * Get the root selector for the component.
      *
@@ -43,7 +48,8 @@ class MaliBlog extends BaseComponent
         ];
     }
     public function osnovniElementiKomponente(Browser $browser){
-        foreach ($browser->osnovniElementi as $key=>$value){
+        $elementi=$this->data['elementi'];
+        foreach ($elementi as $key=>$value){
             //Ukoliko je dat multidimenzionalni niz poziva staticku metodu helpera
             if (is_array($value)){
                 ElementHelper::osnovniElementi($browser,$key,$value);
@@ -53,43 +59,37 @@ class MaliBlog extends BaseComponent
             }
         }
         //Ukoliko ima sliku provera da li je niz odgovarajucih slika ucitan
-        //Treba zadati apsolutnu putanju selektora
-        $selectorSlike=['#vazniPostovi .img-responsive'];
+        $selectorSlike=null;
         if (isset($selectorSlike)){
             foreach ($selectorSlike as $s){
-//                dd($s);
                 $s=ElementHelper::selektorSlike($browser,$s);
                 $browser->assertPresent($s);
             }
         }
         ;
-
     }
 
     public function proveraPodatakaIzModela(Browser $browser){
-        $skill=5;
-        $paginacija=3;
-        $data=$this->postoviPoSkillu($skill,$paginacija);
+        $data=$this->postoviPoSkillu($this->data['skill'],$this->data['paginacija']);
         foreach ($data as $d){
-            //Pristupanje src atributu preko JQuerija
-            $srcAtribut=$browser->script("return $('#vazniPostovi .img-responsive').attr('src')");
-            //Selektovanje elementa preko src atributa
-            $selectorSlike='[src="'.$srcAtribut[0].'"]';
-//            dd($selectorSlike);
             //Provera naslova
             $browser
                 //Provera linka
                 ->assertSeeLink($d->name)
-                //Provera da li je odgovarajuca slika ucitana
-                ->assertPresent($selectorSlike);
             ;
+            //Provera da li je odgovarajuca slika ucitana
+            $selectorSlike=['#vazniPostovi .img-responsive'];
+            if (isset($selectorSlike)){
+                foreach ($selectorSlike as $s){
+                    $s=ElementHelper::selektorSlike($browser,$s);
+                    $browser->assertPresent($s);
+                }
+            };
         }
     }
 
     public function testiranjeNavigacijeKategorija(Browser $browser){
-        $skill=5;
-        $paginacija=3;
-        $data=$this->postoviPoSkillu($skill,$paginacija);
+        $data=$this->postoviPoSkillu($this->data['skill'],$this->data['paginacija']);
         //Testiranje prvog posta
         $browser->clickLink($data[0]->naslov)
             //Provera preko rute
@@ -112,14 +112,14 @@ class MaliBlog extends BaseComponent
     }
 
     public function brojMaxPaginacije(Browser $browser){
-        $brojPostova=$this->brojPostovaPoSkillu($browser->skill);
+        $brojPostova=$this->brojPostovaPoSkillu($this->data['skill']);
         //Zaokruzuje na prvi veci broj
-        $maxPaginacija=ceil($brojPostova/$browser->paginacija);
+        $maxPaginacija=ceil($brojPostova/$this->data['paginacija']);
         //Proverava da li je prikazan maksimalan broj panigacije
         $browser->assertSeeIn('.pagination',$maxPaginacija);
         //Proverava da li je prikazana kompletna panigacija
         $browser->assertSeeIn('.pagination',$maxPaginacija);
-        for ($i=1;$i=$maxPaginacija+1;$i++){
+        for ($i=1;$i<$maxPaginacija+1;$i++){
             $browser->assertSeeIn('.pagination',$i);
         };
 

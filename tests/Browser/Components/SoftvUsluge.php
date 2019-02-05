@@ -4,13 +4,16 @@ namespace Tests\Browser\Components;
 
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
+use Tests\Browser\utilities\ElementHelper;
 
 class SoftvUsluge extends BaseComponent
 {
     protected $ruta;
-    public function __construct()
+    protected $data;
+    public function __construct($data)
     {
         $this->ruta=$this->baseUrl().'/softver';
+        $this->data=$data;
     }
 
     /**
@@ -58,5 +61,14 @@ class SoftvUsluge extends BaseComponent
             ->back()
             ->assertUrlIs($this->baseUrl().'/')
         ;
+    }
+
+    public function proveraPodatakaIzModela(Browser $browser){
+        $section=$this->data['section'][2];
+        ElementHelper::osnovniElementi($browser,'link',[$section->naslov]);
+        //Daje se apsolutna putanja
+        $selektorSlike=ElementHelper::selektorSlike($browser,".ipost [alt]");
+        $browser->assertPresent($selektorSlike);
+
     }
 }

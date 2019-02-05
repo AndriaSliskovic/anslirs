@@ -21,10 +21,10 @@ Route::resource('user','UserController');
 Route::resource('profile', 'ProfilesController');
 //Izvuceno iz middlewarea zbog testiranja
 
-Route::resource('kategorije', 'CategoryController');
+
 
 Route::group(['middleware' => ['admin'],'prefix' => 'admin'], function () {
-
+    Route::resource('kategorije', 'CategoryController');
     Route::resource('settings', 'SettingsController');
     Route::resource('oblast','OblastController');
     Route::resource('menu','MenuController');

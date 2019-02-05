@@ -12,6 +12,7 @@ use Tests\Browser\Components\Header;
 use Tests\Browser\Components\Kategorije;
 use Tests\Browser\Components\MenuComponent;
 use Tests\Browser\Components\SrednjiBlog;
+use Tests\Browser\Components\Proizvodix2;
 
 class SoftverTest extends DuskTestCase
 {
@@ -113,16 +114,11 @@ class SoftverTest extends DuskTestCase
      */
 
     public function komponenta_carusel_veliki(){
-
+        $this->data['elementi']=['Knjigovodsveni softver','WEB SAJTOVI','Softver za pravna lica'];
+        $this->data['sectionId']=8;
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $sectionId=8;
-            $osnovniElementi=['Knjigovodsveni softver','WEB SAJTOVI','Softver za pravna lica'];
-//  !!! NACIN PUSTANJA DODATNOG PARAMETRA KROZ CLOUSURE FUNKCIJU !!!
-            $browser->whenAvailable(new CaruselVeliki(), function ($browser) use ($sectionId,$osnovniElementi) {
-//  !!! SVE MORA DA SE SETUJE U OBJEKAT BROWSER ZBOG CLOUSURE FUNKCIJE  !!!
-                $browser->sectionId=$sectionId;
-                $browser->osnovniElementi=$osnovniElementi;
+            $browser->whenAvailable(new CaruselVeliki($this->data), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
                     ->proveraPodatakaIzModela($browser)
@@ -140,13 +136,11 @@ class SoftverTest extends DuskTestCase
      */
 
     public function komponenta_about(){
+        $this->data['elementi']=['SLIŠKOVIĆ ANDRIA','direktor ANSLI D.O.O.'];
+        $this->data['sectionId']=5;
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $sectionId=10;
-            $osnovniElementi=['SLIŠKOVIĆ ANDRIA','direktor ANSLI D.O.O.'];
-            $browser->whenAvailable(new About(), function ($browser) use($sectionId,$osnovniElementi) {
-                $browser->sectionId=$sectionId;
-                $browser->osnovniElementi=$osnovniElementi;
+            $browser->whenAvailable(new About($this->data), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
                     ->proveraPodatakaIzModela($browser)
@@ -163,11 +157,11 @@ class SoftverTest extends DuskTestCase
      */
 
     public function komponenta_kategorije(){
+        $this->data['elementi']=['KATEGORIJE'];
+        $this->data['ruta']='softver';
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $osnovniElementi=['KATEGORIJE'];
-            $browser->whenAvailable(new Kategorije(), function ($browser) use($osnovniElementi) {
-                $browser->osnovniElementi=$osnovniElementi;
+            $browser->whenAvailable(new Kategorije($this->data), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
                     ->proveraPodatakaIzModela($browser)
@@ -187,24 +181,40 @@ class SoftverTest extends DuskTestCase
      * @group SoftverTest
      */
     public function kommponenta_srednji_blog(){
+        $this->data['elementi']=['link'=>['Novosti na novom sajtu.','Objavio Andria'],
+                                'text'=>['Softver obavestenje','Kategorija']
+                                ];
+        $this->data['oblastId']=2;
+        $this->data['paginacija']=4;
+        $this->data['ruta']='softver';
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $oblastId=2;
-            $paginacija=4;
-            $osnovniElementi=[  'link'=>['Novosti na novom sajtu.','Objavio Andria'],
-                'text'=>['Softver obavestenje','Kategorija']
-            ];
-            $ruta='softver';
-            $browser->whenAvailable(new SrednjiBlog(), function ($browser) use ($osnovniElementi,$oblastId,$paginacija,$ruta) {
-                $browser->osnovniElementi=$osnovniElementi;
-                $browser->oblastId=$oblastId;
-                $browser->paginacija=$paginacija;
-                $browser->ruta=$ruta;
+            $browser->whenAvailable(new SrednjiBlog($this->data), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
                     ->proveraPodatakaIzModela($browser)
                     ->testiranjeNavigacijePosta($browser)
                     ->brojMaxPaginacije($browser)
+                ;
+            });
+
+        });
+    }
+
+    /**
+     * @test
+     * @group SoftProizvodi2x2
+     * @group SoftverTest
+     */
+    public function kommponenta_proizvodi_2x2(){
+        $this->data['elementi']=['Programski paket','Program za agencije','BAKERY','prodaje, prometa'];
+        $this->data['secId']=9;
+        $this->loadPage();
+        $this->browse(function (Browser $browser) {
+            $browser->whenAvailable(new Proizvodix2($this->data), function ($browser) {
+                $browser
+                    ->osnovniElementiKomponente($browser)
+                    ->proveraPodatakaIzModela($browser)
                 ;
             });
 

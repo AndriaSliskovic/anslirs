@@ -2,6 +2,8 @@
 
 namespace Tests\Browser\Components;
 
+use App\Category;
+use App\Post;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 use App\Oblast;
@@ -9,6 +11,12 @@ use Tests\Browser\utilities\ElementHelper;
 
 class VelikiBlog extends BaseComponent
 {
+    protected $data;
+    public function __construct($data=null)
+    {
+       $this->data=$data;
+    }
+
     /**
      * Get the root selector for the component.
      *
@@ -43,8 +51,8 @@ class VelikiBlog extends BaseComponent
     }
 
     public function osnovniElementiKomponente(Browser $browser){
-
-        foreach ($browser->osnovniElementi as $key=>$value){
+        $elementi=$this->data['elementi'];
+        foreach ($elementi as $key=>$value){
             //Ukoliko je dat multidimenzionalni niz poziva staticku metodu helpera
             if (is_array($value)){
                 ElementHelper::osnovniElementi($browser,$key,$value);
@@ -55,27 +63,22 @@ class VelikiBlog extends BaseComponent
         }
         //Ukoliko ima sliku provera da li je niz odgovarajucih slika ucitan
         //Treba zadati apsolutnu putanju selektora
-        $selectorSlike=['.img-responsive'];
+        $selectorSlike=['#glavniBlog .img-responsive'];
         if (isset($selectorSlike)){
             foreach ($selectorSlike as $s){
-//                dd($s);
                 $s=ElementHelper::selektorSlike($browser,$s);
                 $browser->assertPresent($s);
             }
         }
         ;
-
     }
 
 
     public function proveraPodatakaIzModela(Browser $browser){
-
-        $data=$this->postoviPoOblasti($browser->oblastId,$browser->paginacija);
+        $oblastId=$this->data['oblastId'];
+        $paginacija=$this->data['paginacija'];
+        $data=$this->postoviPoOblasti($this->data['oblastId'],$this->data['paginacija']);
         foreach ($data as $d){
-            //Pristupanje src atributu preko JQuerija
-            $srcAtribut=$browser->script("return $('.img-responsive').attr('src')");
-            //Selektovanje elementa preko src atributa
-            $selectorSlike='[src="'.$srcAtribut[0].'"]';
             //Provera naslova
             $browser->assertSee($d->naslov)
                 //Provera kategorije
@@ -84,17 +87,21 @@ class VelikiBlog extends BaseComponent
                 ->assertSee($d->user->name)
                 //Provera linka
                 ->assertSeeLink('Procitaj vise')
-                //Provera da li je odgovarajuca slika ucitana
-                ->assertPresent($selectorSlike);
             ;
+            //Provera da li je odgovarajuca slika ucitana
+            $selectorSlike=['#glavniBlog .img-responsive'];
+            if (isset($selectorSlike)){
+                foreach ($selectorSlike as $s){
+                    $s=ElementHelper::selektorSlike($browser,$s);
+                    $browser->assertPresent($s);
+                }
+            };
         }
 
     }
 
     public function testiranjeNavigacijePosta(Browser $browser){
-        $oblastId=3;
-        $paginacija=3;
-        $data=$this->postoviPoOblasti($oblastId,$paginacija);
+        $data=$this->postoviPoOblasti($this->data['oblastId'],$this->data['paginacija']);
         //Testiranje prvog posta
         $browser->clickLink($data[0]->naslov)
             //Provera preko rute
@@ -115,10 +122,22 @@ class VelikiBlog extends BaseComponent
         }
         $browser->assertRouteIs('home');
     }
+
+    public function modelFakePodaci(Browser $browser){
+        $paginacija=3;
+        $postovi=$this->data;
+        $postovi=$postovi->sortByDesc('vremeIzrade')
+            ->take($paginacija);
+        foreach ($postovi as $data){
+            $browser->assertSeeLink($data->naslov);
+        }
+    }
+
     public function postoviPoOblasti($idOblast,$pag=null){
         $postovi=Oblast::find($idOblast)->posts()
             ->orderBy('vremeIzrade', 'desc')
             ->paginate($pag);
         return $postovi;
     }
+
 }

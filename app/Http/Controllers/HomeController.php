@@ -30,6 +30,7 @@ class HomeController extends Controller
         $this->data['softver']=$this->repository->section(3);
         $this->data['kompanija']=$this->repository->section(4);
         $this->data['opstiPost']=$this->repository->postoviPoOblasti(3,3);
+//        dd($this->data['opstiPost']);
         return view($this->view,$this->data);
     }
 

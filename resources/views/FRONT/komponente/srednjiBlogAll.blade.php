@@ -1,4 +1,4 @@
-<section dusk="srednjiBlogAll">
+<section id="srednjiBlogAll">
 @foreach($var as $v)
 
 	<!-- Srednji Blog All -->

@@ -5,12 +5,16 @@ namespace Tests\Browser\Components;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 use App\Section;
+use Tests\Browser\utilities\ElementHelper;
+
 
 class OpstiDeo extends BaseComponent
 {
     protected $ruta;
-    public function __construct()
+    protected $data;
+    public function __construct($data=null)
     {
+        $this->data=$data;
         $this->ruta=$this->baseUrl().'/about';
     }
 
@@ -48,13 +52,34 @@ class OpstiDeo extends BaseComponent
     }
 
     public function osnovniElementiKomponente(Browser $browser){
-        $browser->assertSee('Kompanija koja se bavi knjigovodstvenim uslugama i izradom softvera za knjigovodstvene agencije.')
-            ->assertSeeLink('O nama')
+        $elementi=$this->data['elementi'];
+        foreach ($elementi as $key=>$value){
+            //Ukoliko je dat multidimenzionalni niz poziva staticku metodu helpera
+            if (is_array($value)){
+//                $browser->waitFor('@opstiDeo > p');
+                ElementHelper::osnovniElementi($browser,$key,$value);
+            }else{
+                //Ukoliko nije niz ispituje tekst
+                $browser->assertSee($value);
+            }
+        }
+        //Ukoliko ima sliku provera da li je niz odgovarajucih slika ucitan
+        //Treba zadati apsolutnu putanju selektora
+        $selectorSlike=null;
+        if (isset($selectorSlike)){
+            foreach ($selectorSlike as $s){
+                $s=ElementHelper::selektorSlike($browser,$s);
+                $browser->assertPresent($s);
+            }
+        }
         ;
+
     }
 
     public function testiranjeNavigacije(Browser $browser){
-        $browser->clickLink('O nama')
+        $link=$this->data['elementi']['link'][0];
+        $browser->waitForLink($link)
+            ->clickLink($link)
             ->assertUrlIs($this->ruta)
             ->back()
             ->assertUrlIs($this->baseUrl().'/')
@@ -80,5 +105,9 @@ class OpstiDeo extends BaseComponent
 
     public function section($idCatSec){
         return Section::where('sec_id',$idCatSec)->first();
+    }
+
+    public function sectionTestBase(){
+
     }
 }

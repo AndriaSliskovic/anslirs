@@ -28,11 +28,14 @@ class FrontRepository
     }
 
     public function postoviPoOblasti($idOblast,$pag){
+//        dd(Oblast::find($idOblast)->posts()->count());
+//        dd(Oblast::find($idOblast)->posts());
         //!!!--Mora se definisati post() a ne ->post ,
         // da bi se dobio objekat koji se moze paginirati
         $postovi=Oblast::find($idOblast)->posts()
             ->orderBy('vremeIzrade', 'desc')
             ->paginate($pag);
+//        dd($postovi);
         return $postovi;
     }
 

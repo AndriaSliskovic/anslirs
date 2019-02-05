@@ -2,14 +2,22 @@
 
 namespace Tests;
 
+use App\Menu;
+use App\Settings;
+use App\Section;
+use App\Category;
+use App\User;
 use Laravel\Dusk\TestCase as BaseTestCase;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 
+
 abstract class DuskTestCase extends BaseTestCase
 {
     use CreatesApplication;
+
+    protected $data;
 
     /**
      * Prepare for Dusk test execution.
@@ -41,4 +49,6 @@ abstract class DuskTestCase extends BaseTestCase
             )
         );
     }
+
+
 }

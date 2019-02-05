@@ -9,6 +9,13 @@ use Tests\Browser\utilities\ElementHelper;
 
 class Kategorije extends BaseComponent
 {
+
+    protected $data;
+
+    public function __construct($data=null)
+    {
+        $this->data=$data;
+    }
     /**
      * Get the root selector for the component.
      *
@@ -43,7 +50,8 @@ class Kategorije extends BaseComponent
     }
 
     public function osnovniElementiKomponente(Browser $browser){
-        foreach ($browser->osnovniElementi as $key=>$value){
+        $elementi=$this->data['elementi'];
+        foreach ($elementi as $key=>$value){
             //Ukoliko je dat multidimenzionalni niz poziva staticku metodu helpera
             if (is_array($value)){
                 ElementHelper::osnovniElementi($browser,$key,$value);
@@ -83,7 +91,7 @@ class Kategorije extends BaseComponent
             //Provera preko rute
             ->assertRouteIs('katPostova',$data[0]->id)
             ->back()
-            ->waitForRoute('home');
+            ->waitForRoute($this->data['ruta']);
 
         //Testiranje svih ucitanih kategorija
         foreach ($data as $d){
@@ -93,10 +101,10 @@ class Kategorije extends BaseComponent
                 //Provera preko rute
                 ->assertRouteIs('katPostova',$d->id)
                 ->back()
-                ->waitForRoute('home')
+                ->waitForRoute($this->data['ruta'])
             ;
         }
-        $browser->assertRouteIs('home');
+        $browser->assertRouteIs($this->data['ruta']);
     }
 
 

@@ -9,9 +9,9 @@ use Tests\Browser\Components\Header;
 use Tests\Browser\Components\Kategorije;
 use Tests\Browser\Components\KnjigUsluge;
 use Tests\Browser\Components\MaliBlog;
-use Tests\Browser\Components\Menu;
 use Tests\Browser\Components\MenuComponent;
 use Tests\Browser\Components\OpstiDeo;
+use Tests\Browser\Components\SoftvUsluge;
 use Tests\Browser\Components\VelikiBlog;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
@@ -172,7 +172,7 @@ class HomePageTest extends DuskTestCase
     public function komponenta_softverske_usluge(){
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $browser->whenAvailable(new KnjigUsluge(), function ($browser) {
+            $browser->whenAvailable(new SoftvUsluge(), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
                     ->testiranjeNavigacije($browser)
@@ -188,19 +188,14 @@ class HomePageTest extends DuskTestCase
      */
 
     public function komponenta_carusel_veliki(){
-
+        $this->data['elementi']=['ANSLI D.O.O.','Knjigovodstvo','Softver'];
+        $this->data['sectionId']=1;
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $sectionId=1;
-            $osnovniElementi=['ANSLI D.O.O.','Knjigovodstvo','Softver'];
-//  !!! NACIN PUSTANJA DODATNOG PARAMETRA KROZ CLOUSURE FUNKCIJU !!!
-            $browser->whenAvailable(new CaruselVeliki(), function ($browser) use ($sectionId,$osnovniElementi) {
-//  !!! SVE MORA DA SE SETUJE U OBJEKAT BROWSER ZBOG CLOUSURE FUNKCIJE  !!!
-                $browser->sectionId=$sectionId;
-                $browser->osnovniElementi=$osnovniElementi;
+            $browser->whenAvailable(new CaruselVeliki($this->data), function ($browser) {
                 $browser
-                    ->osnovniElementiKomponente($browser)
-//                    ->proveraPodatakaIzModela($browser)
+//                    ->osnovniElementiKomponente($browser)
+                    ->proveraPodatakaIzModela($browser)
                     //Nema navigaciju
                 ;
             });
@@ -215,8 +210,13 @@ class HomePageTest extends DuskTestCase
 
     public function komponenta_opsti_deo(){
         $this->loadPage();
+        $this->data['elementi']=
+            [
+            'text'=>['Kompanija koja se bavi knjigovodstvenim uslugama i izradom softvera za knjigovodstvene agencije.'],
+            'link'=>['O nama']
+            ];
         $this->browse(function (Browser $browser) {
-            $browser->whenAvailable(new OpstiDeo(), function ($browser) {
+            $browser->whenAvailable(new OpstiDeo($this->data), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
                     ->testiranjeNavigacije($browser)
@@ -234,15 +234,11 @@ class HomePageTest extends DuskTestCase
 
     public function komponenta_veliki_blog(){
         $this->loadPage();
+        $this->data['elementi']=['text'=>['Osnovana kompanije ','Knjigovodsvene usluge','Kategorija','Objavio :']];
+        $this->data['oblastId']=3;
+        $this->data['paginacija']=3;
         $this->browse(function (Browser $browser) {
-            $oblastId=3;
-            $paginacija=3;
-            $osnovniElementi=['text'=>['Osnovana kompanije ','Knjigovodsvene usluge','Kategorija','Objavio :']];
-//            $osnovniElementi=['Osnovana kompanije ','Knjigovodsvene usluge','Kategorija','Objavio :'];
-            $browser->whenAvailable(new VelikiBlog(), function ($browser) use ($osnovniElementi,$oblastId,$paginacija) {
-                $browser->osnovniElementi=$osnovniElementi;
-                $browser->oblastId=$oblastId;
-                $browser->paginacija=$paginacija;
+            $browser->whenAvailable(new VelikiBlog($this->data), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
                     ->proveraPodatakaIzModela($browser)
@@ -261,14 +257,12 @@ class HomePageTest extends DuskTestCase
     public function komponenta_about(){
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $sectionId=5;
-            $osnovniElementi=['SLIŠKOVIĆ ANDRIA','direktor'];
-            $browser->whenAvailable(new About(), function ($browser) use($sectionId,$osnovniElementi) {
-                $browser->sectionId=$sectionId;
-                $browser->osnovniElementi=$osnovniElementi;
+            $this->data['sectionId']=5;
+            $this->data['elementi']=['SLIŠKOVIĆ ANDRIA','direktor'];
+            $browser->whenAvailable(new About($this->data), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
-//                    ->proveraPodatakaIzModela($browser)
+                    ->proveraPodatakaIzModela($browser)
                 ;
             });
 
@@ -281,15 +275,16 @@ class HomePageTest extends DuskTestCase
      */
 
     public function komponenta_kategorije(){
+        $this->data['elementi']=['KATEGORIJE'];
+        $this->data['ruta']='home';
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $osnovniElementi=['KATEGORIJE'];
-            $browser->whenAvailable(new Kategorije(), function ($browser) use($osnovniElementi) {
-                $browser->osnovniElementi=$osnovniElementi;
+
+            $browser->whenAvailable(new Kategorije($this->data), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
-//                    ->proveraPodatakaIzModela($browser)
-//                    ->testiranjeNavigacijeKategorija($browser)
+                    ->proveraPodatakaIzModela($browser)
+                    ->testiranjeNavigacijeKategorija($browser)
                 ;
             });
 
@@ -304,21 +299,20 @@ class HomePageTest extends DuskTestCase
     public function komponenta_mali_blog(){
         $this->loadPage();
         $this->browse(function (Browser $browser) {
-            $skill=5;
-            $paginacija=4;
-            $osnovniElementi=['link'=>['Nova verzija','Opis programa']];
-            $browser->whenAvailable(new MaliBlog(), function ($browser) use ($skill,$paginacija,$osnovniElementi){
-                $browser->skill=$skill;
-                $browser->paginacija=$paginacija;
-                $browser->osnovniElementi=$osnovniElementi;
+            $this->data['skill']=5;
+            $this->data['paginacija']=3;
+            $this->data['elementi']=['link'=>['Nova verzija','Opis programa']];
+            $browser->whenAvailable(new MaliBlog($this->data), function ($browser){
                 $browser
                     ->osnovniElementiKomponente($browser)
-//                    ->proveraPodatakaIzModela($browser)
-//                    ->testiranjeNavigacijeKategorija($browser)
-//                    ->brojMaxPaginacije($browser)
+                    ->proveraPodatakaIzModela($browser)
+                    ->testiranjeNavigacijeKategorija($browser)
+                    ->brojMaxPaginacije($browser)
                 ;
             });
 
         });
     }
+
+
 }

@@ -27,10 +27,10 @@
                 </thead>
                 <tbody>
                 @foreach($var as $obj)
-                    <tr >
+                    <tr dusk="row-{{$obj->id}}">
                         <td class="align-middle">{{$obj->name}}</td>
                         <td class="align-middle">{{$obj->oblast->name}}</td>
-                        <td scope="col" class="text-right"><a href="#">
+                        <td scope="col" class="text-right">
                     {{-- editDeleteGrupa--}}
                         @component('CRUD.komponente.editDeleteGrupa',
                         [
@@ -38,6 +38,7 @@
                         'route'=>$route
                         ])
                             @endcomponent
+
                         </td>
                     </tr>
                 @endforeach

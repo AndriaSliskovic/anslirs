@@ -8,6 +8,11 @@ use App\Section;
 
 class CaruselVeliki extends BaseComponent
 {
+    protected $data;
+    public function __construct($data=null)
+    {
+        $this->data=$data;
+    }
     /**
      * Get the root selector for the component.
      *
@@ -41,7 +46,7 @@ class CaruselVeliki extends BaseComponent
         ];
     }
     public function osnovniElementiKomponente(Browser $browser){
-        foreach ($browser->osnovniElementi as $el){
+        foreach ($this->data['elementi'] as $el){
             $browser->waitForText($el)
                 ->assertSee($el)
                 ->pause(4000);
@@ -51,7 +56,7 @@ class CaruselVeliki extends BaseComponent
 
     public function proveraPodatakaIzModela($browser){
 //      !!! $browser->sectionId je setovani properti
-        $data=$this->carusel($browser->sectionId);
+        $data=$this->carusel($this->data['sectionId']);
         foreach ($data as $d){
             if ($d->podnaslov){
                 $browser->assertSee($d->naslov)

@@ -69,10 +69,30 @@ public static function osnovniElementi(Browser $browser,$key,$value){
 
 public static function selektorSlike($browser,$selector){
     //Pristupanje src atributu preko JQuerija
+    //Koristiti selektor apsolutne putanje
     $srcAtribut=$browser->script("return $('".$selector."').attr('src')");
     //Selektovanje elementa preko src atributa
     $selectorSlike='[src="'.$srcAtribut[0].'"]';
     return $selectorSlike;
+}
+
+public static function getSrcAttribute($browser,$selector){
+    $srcAtribut=$browser->script("return $('".$selector."').attr('src')");
+    return $srcAtribut[0];
+}
+
+/*
+ * Parametar
+ * $options - kolekcija svih optionsa
+ * Vraca niz
+ */
+public static function getValuesOfSelectOptions($options){
+    $nizOption=[];
+    $brOptiona=$options->count();
+    for ($i=0;$i<$brOptiona;$i++){
+        array_push($nizOption,$options[$i]['id']);
+    }
+    return $nizOption;
 }
 
 
