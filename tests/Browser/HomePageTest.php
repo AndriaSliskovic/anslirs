@@ -219,8 +219,8 @@ class HomePageTest extends DuskTestCase
             $browser->whenAvailable(new OpstiDeo($this->data), function ($browser) {
                 $browser
                     ->osnovniElementiKomponente($browser)
-                    ->testiranjeNavigacije($browser)
-                    ->proveraPodatakaIzModela($browser)
+//                    ->testiranjeNavigacije($browser)
+//                    ->proveraPodatakaIzModela($browser)
                 ;
             });
 

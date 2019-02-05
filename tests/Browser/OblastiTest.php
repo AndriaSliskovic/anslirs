@@ -33,7 +33,7 @@ class OblastiTest extends DuskTestCase
         $this->user=User::find(13);
     }
 
-    protected function logingAsAdministrator($data){
+    protected function logingAsAdministrator($data=null){
         $this->createAdmin();
 
         $this->browse(function ($user) use ($data) {
@@ -66,8 +66,8 @@ class OblastiTest extends DuskTestCase
         $this->logingAsAdministrator($this->data);
         $this->browse(function (Browser $browser) {
             $browser->assertUrlIs($this->baseUrl().$this->ruta)
-//                    ->osnovniElementiStraniceIndex($browser)
-                    ->proveraPodatakaIzModela($browser)
+                    ->osnovniElementiStraniceIndex($browser)
+//                    ->proveraPodatakaIzModela($browser)
             ;
         });
     }
