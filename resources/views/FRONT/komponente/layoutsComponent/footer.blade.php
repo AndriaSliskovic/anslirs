@@ -26,9 +26,9 @@
             </div>
             <div class="col-xs-12 col-sm-6 col-lg-3">
                 {{--<h6>Adresa :</h6>--}}
-                <address>
-                    {{$settings->adresa}},<br>
-                    {{$settings->mesto}}<br> {{$settings->email}} | {{$settings->telefon}}
+                <address itemscope itemtype="https://schema.org/Person">
+                    <span itemprop="address">{{$settings->adresa}}</span>,<br>
+                    <span itemprop="homeLocation" >{{$settings->mesto}}</span><br> <span itemprop="email">{!! $settings->email !!} </span> | <span itemprop="telephone">{{$settings->telefon}}</span>
                 </address>
             </div>
         </div>

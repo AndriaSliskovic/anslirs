@@ -38,4 +38,22 @@ class AdminPocetna extends Page
             '@element' => '#selector',
         ];
     }
+
+    public function navNijeAdmin(Browser $browser){
+        $messageError='Nemate ovlascenje da pristupite ovoj stranici';
+        $browser->clickLink('Kategorije');
+        $this->toastrMessage($browser,$messageError);
+        $browser->clickLink('Oblasti');
+        $this->toastrMessage($browser,$messageError);
+        $browser->clickLink('Tipovi');
+        $this->toastrMessage($browser,$messageError);
+        $browser->clickLink('Postovi');
+        $this->toastrMessage($browser,$messageError);
+        $browser->clickLink('Menu');
+        $this->toastrMessage($browser,$messageError);
+        $browser->clickLink('Dokumenti');
+        $this->toastrMessage($browser,$messageError);
+    }
+
+
 }

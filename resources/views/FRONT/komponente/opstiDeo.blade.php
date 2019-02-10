@@ -1,6 +1,6 @@
 <div dusk="opstiDeo">
-    <h1 class="blok-teksta-srednjiBlog">{!! $var->sadrzaj !!}</h1>
-    <h2>Vlasnik kompanije Andria Slišković</h2>
+    <p class="blok-teksta-srednjiBlog">{!! $var->sadrzaj !!}</p>
+    <p>Vlasnik kompanije Andria Slišković</p>
 
     <a href="{{route('about')}}" class="button">{{$var->naslov}}</a>
 </div>

@@ -2,7 +2,8 @@
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
+use Tests\DuskTestCase as DuskTestCase;
+//use BeyondCode\DuskDashboard\Testing\TestCase as DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\User;
@@ -10,10 +11,8 @@ use Tests\Browser\Pages\Oblasti;
 
 class OblastiTest extends DuskTestCase
 {
-    protected $user;
     protected $ruta;
-    protected $data;
-
+    protected $page;
 
     public function setUp()
     {
@@ -21,36 +20,19 @@ class OblastiTest extends DuskTestCase
         $this->data['text']='test oblast';
         $this->data['iDOblast']=3;
         $this->ruta='/admin/oblast';
-        $this->logingAsAdministrator($this->data);
-    }
-
-    //Setovanje usera
-    protected function createUser(){
-        $this->user=User::find(14);
-    }
-    //Setovanje admina
-    protected function createAdmin(){
-        $this->user=User::find(13);
-    }
-
-    protected function logingAsAdministrator($data=null){
-        $this->createAdmin();
-
-        $this->browse(function ($user) use ($data) {
-            $user->loginAs($this->user)
-                //Insanciranje Kategorije page
-                ->visit(new Oblasti($data));
-        });
+        $this->data['userId']=13;
+        $this->page=Oblasti::class;
     }
 
     /**
      * @test
      * @group OblastiIndex
+     * @group OblastTest
      */
 
     public function kategorije_index(){
+        $this->logingAsAdministrator($this->page,$this->data);
         $this->browse(function (Browser $browser) {
-            $this->logingAsAdministrator();
             $browser->assertUrlIs($this->baseUrl().$this->ruta);
         });
     }
@@ -58,12 +40,13 @@ class OblastiTest extends DuskTestCase
     /**
      * @test
      * @group OblastiOsnovniElementiIndex
+     * @group OblastTest
      */
     public function osnovni_elementi_index_stranice(){
         $this->data['elementi']=[  'link'=>['Unesi novi zapis'],
             'text'=>['Podaci o oblastima','Naziv oblasti','Knjigovodstvo','Softver']
         ];
-        $this->logingAsAdministrator($this->data);
+        $this->logingAsAdministrator($this->page,$this->data);
         $this->browse(function (Browser $browser) {
             $browser->assertUrlIs($this->baseUrl().$this->ruta)
                     ->osnovniElementiStraniceIndex($browser)
@@ -76,9 +59,11 @@ class OblastiTest extends DuskTestCase
     /**
      * @test
      * @group OblastiCRUD
+     * @group OblastTest
      */
 
     public function insert_edit_delete(){
+        $this->logingAsAdministrator($this->page,$this->data);
         $this->browse(function (Browser $browser) {
             $browser->assertUrlIs($this->baseUrl().$this->ruta)
                 ->unesiZapis($browser)
@@ -86,7 +71,7 @@ class OblastiTest extends DuskTestCase
                 ->obrisiZapis($browser)
                 ;
         });
-
     }
+
 
 }

@@ -2,63 +2,62 @@
 
 namespace Tests\Browser;
 
-use Tests\Browser\Pages\Kategorije;
+use Tests\Browser\Pages\Page;
+use Tests\Browser\Pages\PostPage;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\User;
-use Tests\Browser\Pages\Oblasti;
 
-class KategorijeTest extends DuskTestCase
+class PostTest extends DuskTestCase
 {
     protected $ruta;
     protected $page;
 
-
     public function setUp()
     {
         parent::setUp();
-        $this->data['text']='test kategorija';
-        $this->data['iDOblast']=3;
-        $this->ruta='/admin/kategorije';
+        $this->data['text']='test post';
+        $this->ruta='/admin/postovi';
         $this->data['userId']=13;
-        $this->page=Kategorije::class;
+        $this->page=PostPage::class;
     }
+
     /**
      * @test
-     * @group KategorijeIndex
-     * @group KategorijeTest
+     * @group PostIndex
+     * @group PostTest
      */
 
-    public function kategorije_index(){
+    public function post_index(){
+        $this->logingAsAdministrator($this->page,$this->data);
         $this->browse(function (Browser $browser) {
-            $this->logingAsAdministrator($this->page,$this->data);
             $browser->assertUrlIs($this->baseUrl().$this->ruta);
         });
     }
 
     /**
      * @test
-     * @group KategorijeOsnovniElementiIndex
-     * @group KategorijeTest
+     * @group PostOsnovniElementiIndex
+     * @group PostTest
      */
+
     public function osnovni_elementi_index_stranice(){
         $this->data['elementi']=[  'link'=>['Unesi novi zapis'],
-            'text'=>['Podaci o kategorijama','Naziv kategorije','Oblast','Novi propisi']
+            'text'=>['Slika','Naslov','Kategorija']
         ];
         $this->logingAsAdministrator($this->page,$this->data);
         $this->browse(function (Browser $browser) {
             $browser->assertUrlIs($this->baseUrl().$this->ruta)
-                    ->osnovniElementiStraniceIndex($browser)
-                    ->proveraPodatakaIzModela($browser);
+                ->osnovniElementiStraniceIndex($browser)
+                ->proveraPodatakaIzModela($browser)
+            ;
         });
     }
 
-
     /**
      * @test
-     * @group KategorijeCRUD
-     * @group KategorijeTest
+     * @group PostCRUD
+     * @group PostTest
      */
 
     public function insert_edit_delete(){
@@ -68,9 +67,9 @@ class KategorijeTest extends DuskTestCase
                 ->unesiZapis($browser)
                 ->promeniZapis($browser)
                 ->obrisiZapis($browser)
-                ;
+            ;
         });
-
     }
+
 
 }

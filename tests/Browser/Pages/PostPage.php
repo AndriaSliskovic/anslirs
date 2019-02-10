@@ -4,27 +4,27 @@ namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
 use Tests\Browser\utilities\ElementHelper;
-use App\Category;
-use App\Oblast;
+use App\Post;
 
-class Oblasti extends Page
+class PostPage extends Page
 {
     protected $data;
-    protected $testKategorija;
     protected $ruta;
+
     public function __construct($data=null)
     {
-        $this->data=$data;
-        $this->ruta='oblast.index';
+        $this->data = $data;
+        $this->ruta='postovi.index';
     }
-    /**
+
+        /**
      * Get the URL for the page.
      *
      * @return string
      */
     public function url()
     {
-        return '/admin/oblast';
+        return '/admin/postovi';
     }
 
     /**
@@ -47,13 +47,13 @@ class Oblasti extends Page
     {
         return [
             '@element' => '#selector',
-            '@naslov'=>'.card-header div:first-child >h4',
-            '@nameInput'=>'.card-body [name=name]',
+            '@naslovInput'=>'.card-body [name=naslov]',
+            '@sadrzajInput'=>'[contenteditable]',
+            '@skillInput'=>'.card-body [name=skill]',
+            '@datePicker'=>'.card-body [name=vremeIzrade]',
             '@unesiButton'=>'.card-header [type="button"]',
-            '@select'=>'.select [name="oblast_id"]',
-            '@submitButton'=>'.card-body [type="submit"]',
             '@cancelButton'=>'.btn-warning',
-            '@toastr'=>'[data-sa-theme] script:nth-child(9)'
+            '@submitButton'=>'.card-body [type="submit"]',
         ];
     }
 
@@ -69,8 +69,8 @@ class Oblasti extends Page
                 $browser->assertSee($value);
             }
         }
-        //Nema sliku tako da se ne proverava
-        $selectorSlike=null;
+        //Slika u obliku niza - proverava da li je prisutan src atribut
+        $selectorSlike=['table tbody img'];
         if (isset($selectorSlike)){
             foreach ($selectorSlike as $s){
                 $s=ElementHelper::selektorSlike($browser,$s);
@@ -81,93 +81,101 @@ class Oblasti extends Page
     }
 
     public function proveraPodatakaIzModela(Browser $browser){
-        $data=$this->sveOblasti();
+        $data=$this->sviPostovi();
         foreach ($data as $d){
             //Provera naslova
-            $browser->assertSee($d->name)
+            $browser->assertSee($d->naslov)
+                //Provera ucitanih kategorija
+                ->assertSee($d->category->name)
+                //Provera ucitanih oblasti
+                ->assertSee($d->category->oblast->name)
             ;
         }
     }
 
     public function unesiZapis(Browser $browser){
         $testUnos=$this->data['text'];
-        $messageSucces='Uspesno promenjeni podaci';
+        $testSlika='/testImages/postTest.png';
+        $messageSucces='Uspesno upisani podaci';
         $browser->click('@unesiButton')
-            ->assertRouteIs('oblast.create');
+            ->assertRouteIs('postovi.create');
         //Provera cancel
         $browser->click('@cancelButton')
             ->assertRouteIs($this->ruta)
             ->back();
-        $browser->clear('@nameInput')
-            ->type('@nameInput',$testUnos)
-            ->click('@submitButton');
+        //Unosenje podataka
+        $browser->clear('@naslovInput')
+            ->type('@naslovInput',$testUnos)
+            ->type('@sadrzajInput',$testUnos)
+            ->type('@skillInput',5)
+            ->type('@datePicker','01012001')
+            ->select('category_id',1)
+            ->select('tipovi_id',1)
+            ->select('user_id',13)
+            ->attach('slika', __DIR__.$testSlika)
+            ->click('@submit')
+        ->assertRouteIs($this->ruta);
         //Provera poruke u toasteru metod je u nadredjenoj klasi
-        $this->toastrMessage($browser,$messageSucces);
+        $this->toastrSuccess($browser,$messageSucces);
         $browser->assertRouteIs($this->ruta)
             ->assertSee($testUnos)
-            ;
+        ;
+        ;
     }
 
-
-
     public function promeniZapis(Browser $browser){
-        $this->testOblast=$this->pronadjiOblastPoImenu($this->data['text']);
-        $id=$this->testOblast->id;
+        $testPost=$this->pronadjiPostPoImenu($this->data['text']);
+//        dd($this->testPost);
+        $id=$testPost->id;
         //Klik na odredjeni zapis
-        $browser->click('@promeni-'.$id.'')
-        //Proverava naslov edit stranice
-        ->value('@naslov','Podaci o oblastimaa')
-        ;
+        $browser->click('@promeni-'.$id.'');
         //Proverava dobijeno ime oblasti sa podatkom iz modela
-        $browser->assertValue('@nameInput',$this->testOblast->name);
+        $browser->assertValue('@naslovInput',$testPost->naslov);
         //Provera cancel
         $browser->click('@cancelButton')
             ->assertRouteIs($this->ruta)
             ->back();
         //MENJANJE PODATAKA
         $izmenjenText='Izmenjen tekst';
-        $browser->clear('@nameInput')
-            ->type('@nameInput',$izmenjenText)
-            ->click('@submitButton');
+        $browser->clear('@naslovInput')
+            ->type('@naslovInput',$izmenjenText)
+            ->click('@submit')
+        ;
         //Povratak na stranicu index
         $browser->assertRouteIs($this->ruta)
             ->assertSee($izmenjenText);
         //Provera da li tekst pravilno upisan
         //Klik na odredjeni zapis
         $browser->click('@promeni-'.$id.'');
-        $browser->assertValue('@nameInput',$izmenjenText);
+        $browser->assertValue('@naslovInput',$izmenjenText);
         //VRACANJE NA STARE PODATKE
-        $browser->clear('@nameInput')
-            ->type('@nameInput',$this->data['text'])
-            ->click('@submitButton');
+        $browser->clear('@naslovInput')
+            ->type('@naslovInput',$this->data['text'])
+            ->click('@submit');
         //Povratak na stranicu index
         $browser->assertRouteIs($this->ruta)
             ->assertSee($this->data['text']);
     }
 
     public function obrisiZapis(Browser $browser){
-        $this->testOblast=$this->pronadjiOblastPoImenu($this->data['text']);
+        $testPost=$this->pronadjiPostPoImenu($this->data['text']);
         $browser->assertSee($this->data['text']);
-        $id=$this->testOblast->id;
+        $id=$testPost->id;
         //Klik na odredjeni zapis
         $browser->click('@obrisi-'.$id.'')
-                ->assertRouteIs($this->ruta)
-                ->assertDontSee($this->data['text'])
+            ->assertRouteIs($this->ruta)
+            ->assertDontSee($this->data['text'])
         ;
     }
 
-    public function sveOblasti(){
-        $oblasti=Oblast::all();
+
+    public function sviPostovi(){
+        $oblasti=Post::all();
         return $oblasti;
     }
 
-    public function pronadjiOblastPoImenu($text){
-        $oblast=Oblast::where('name',$text)->first();
+    public function pronadjiPostPoImenu($text){
+        $oblast=Post::where('naslov',$text)->first();
         return $oblast;
     }
-
-
-
-
-
 }

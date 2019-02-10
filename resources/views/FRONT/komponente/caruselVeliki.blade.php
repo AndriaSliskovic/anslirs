@@ -4,11 +4,11 @@
         <img src="{{asset($v->slika)}}" alt="slide1">
         <div class="carousel-caption">
             <span>
-                <h3 style="color: white;">
+                <h1 style="color: white;">
 
                     {{$v->naslov}}
 
-                </h3>
+                </h1>
 
             </span>
             <h5>{{$v->podnaslov}}</h5>

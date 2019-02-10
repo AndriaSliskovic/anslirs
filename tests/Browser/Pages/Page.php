@@ -1,9 +1,7 @@
 <?php
-
 namespace Tests\Browser\Pages;
-
+use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page as BasePage;
-
 abstract class Page extends BasePage
 {
     /**
@@ -15,7 +13,14 @@ abstract class Page extends BasePage
     {
         return [
             "@userPolje" => "[data-toggle]",
-
         ];
+    }
+
+    public function toastrSuccess(Browser $browser,$message){
+        $browser->assertSeeIn('.toast-message', $message);
+    }
+
+    public function toastrError(Browser $browser,$message){
+        $browser->assertSeeIn('.toast-error', $message);
     }
 }

@@ -8,7 +8,7 @@
             </div>
             <ul class="callto">
                 <li><span>Pozovite nas na tel : {{$settings->telefon}}</span></li>
-                <li><span> Ili nam se obratite emailom : {{$settings->email}}<span></li>
+                <li><span> Ili nam se obratite emailom : {!! $settings->email !!}</span></li>
             </ul>
             <!-- Serarch polje -->
             {{--<div class="search navbar-right col-lg-2 vcenter" style="margin-top: 15px" id="serach">--}}

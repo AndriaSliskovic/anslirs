@@ -21,7 +21,7 @@ use Tests\Browser\Components\VelikiBlog;
 
 class HomeFakeDataTest extends DuskTestCase
 {
-    use DatabaseMigrations;
+//    use DatabaseMigrations;
 //    use DatabaseTransactions;
 //    use RefreshDatabase;
     protected $data;

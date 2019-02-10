@@ -2,15 +2,17 @@
 
 namespace Tests;
 
-use App\Menu;
-use App\Settings;
-use App\Section;
-use App\Category;
-use App\User;
 use Laravel\Dusk\TestCase as BaseTestCase;
+//Dodat Dusk dashboard
+//use BeyondCode\DuskDashboard\Testing\TestCase as BaseTestCase;
+
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
+
+use App\User;
+
+
 
 
 abstract class DuskTestCase extends BaseTestCase
@@ -18,6 +20,7 @@ abstract class DuskTestCase extends BaseTestCase
     use CreatesApplication;
 
     protected $data;
+    protected $user;
 
     /**
      * Prepare for Dusk test execution.
@@ -50,5 +53,32 @@ abstract class DuskTestCase extends BaseTestCase
         );
     }
 
+    //Setovanje usera
+    protected function createUser($userId){
+        $this->user=User::find($userId);
+    }
+    //Setovanje admina
+    protected function createAdmin($userId){
+        $this->user=User::find($userId);
+    }
+
+    protected function loginAsUser($page,$data=null){
+        $this->createUser($this->data['userId']);
+        $this->browse(function ($user) use ($page,$data) {
+            $user->loginAs($this->user)
+                //Insanciranje Kategorije page
+                ->visit(new $page($data));
+        });
+    }
+
+    protected function logingAsAdministrator($page,$data=null){
+        $this->createAdmin($this->data['userId']);
+
+        $this->browse(function ($user) use ($data,$page) {
+            $user->loginAs($this->user)
+                //Insanciranje Kategorije page
+                ->visit(new $page($data));
+        });
+    }
 
 }

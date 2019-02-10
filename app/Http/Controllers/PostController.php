@@ -57,7 +57,7 @@ class PostController extends Controller
         if($request->slika) {
 //        dd('ima slika');
             $this->instance->getImage($request, null, $var,$this->data['modelDTO']);
-dd($request->slika);
+
         }else{
 //        dd('nema slika');
             $var->slika=$this->data['defaultImage'];

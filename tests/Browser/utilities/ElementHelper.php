@@ -21,7 +21,7 @@ protected $data;
      */
 public function sideBarElements(){
     $this->data=[
-        ['Kategorije','/kategorije'],
+        ['Kategorije','/admin/kategorije'],
         ['Oblasti','/admin/oblast'],
         ['Useri','/user'],
         ['Tipovi','/admin/tipovi'],

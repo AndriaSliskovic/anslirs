@@ -1,10 +1,7 @@
 <!--====== Usefull Meta ======-->
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="" />
-<meta name="keywords" content="" />
-<meta name="author" content="" />
-<meta name="robots" content="noindex, nofollow">
+@component('FRONT.komponente.layoutsComponent.metatags')
+    @endcomponent
 <!--====== TITLE TAG ======-->
 <title>{{$title}}</title>
 <!--====== Load Fav Icon ======-->
@@ -33,3 +30,4 @@
 <!--====== Load Custom Style ======-->
 {{--<link rel="stylesheet" type="text/css" href="../style.css">--}}
 <link rel="stylesheet" type="text/css" href="{{asset('front/css/style.css')}}">
+
